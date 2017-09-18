@@ -1,0 +1,51 @@
+apply plugin: "groovy"
+apply plugin: "application"
+
+// see http://mrhaki.blogspot.co.uk/2010/11/gradle-goodness-set-java-version.html
+sourceCompatibility = 1.8 // or '1.6', '6', 6, JavaVersion.VERSION_1_6, new Compatibility('Java 6')
+
+
+class Compatibility {
+    String version
+
+    Compatibility(String versionValue) {
+        def matcher = (versionValue =~ /Java (\d)/)
+        version = matcher[0][1]
+    }
+
+    String toString() { version }
+}
+
+mainClassName = 'com.jhdit.groovy.exercise.whosinspace.Display'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.+'
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.+' // See mvnrepository.com/artifact/org.spockframework/spock-core/
+    testCompile 'cglib:cglib:3.+' // See http://mvnrepository.com/artifact/cglib
+}
+
+test {
+
+    testLogging {
+		// Output status of each test
+    	events "passed", "skipped", "failed", "standardOut", "standardError"
+
+        // Make sure output from  standard out or error is show in Gradle output.
+        showStandardStreams = true
+
+        // Or we use events method:
+        // events 'standard_out', 'standard_error'
+
+        // Or set property events:
+        // events = ['standard_out', 'standard_error']
+
+        // Instead of string values we can
+        // use enum values:
+        // events org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+        //        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+    }
+}
